@@ -392,6 +392,16 @@ impl<'de> serde::Deserializer<'de> for Value {
     {
         match self {
             Value::Array(v) => visit_array(v, visitor),
+            Value::String(_) => {
+                let mut vec = Vec::new();
+                vec.push(self);
+                visit_array(vec, visitor)
+            }
+            Value::Number(_) => {
+                let mut vec = Vec::new();
+                vec.push(self);
+                visit_array(vec, visitor)
+            }
             _ => Err(self.invalid_type(&visitor)),
         }
     }
