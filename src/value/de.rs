@@ -6,7 +6,8 @@ use alloc::borrow::{Cow, ToOwned};
 use alloc::string::String;
 #[cfg(feature = "raw_value")]
 use alloc::string::ToString;
-use alloc::vec::{self, Vec};
+use alloc::vec;
+use alloc::vec::{Vec};
 use core::fmt;
 use core::slice;
 use core::str::FromStr;
@@ -393,14 +394,10 @@ impl<'de> serde::Deserializer<'de> for Value {
         match self {
             Value::Array(v) => visit_array(v, visitor),
             Value::String(_) => {
-                let mut vec = Vec::new();
-                vec.push(self);
-                visit_array(vec, visitor)
+                visit_array(vec![self], visitor)
             }
             Value::Number(_) => {
-                let mut vec = Vec::new();
-                vec.push(self);
-                visit_array(vec, visitor)
+                visit_array(vec![self], visitor)
             }
             _ => Err(self.invalid_type(&visitor)),
         }
